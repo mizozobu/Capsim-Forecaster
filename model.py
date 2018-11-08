@@ -2,6 +2,13 @@ import math
 
 ageOffset = {'Traditional': 2, 'LowEnd': 5, 'HighEnd': 3, 'Performance': 2.5, 'Size': 2.5}
 ARPenalty = {'90': 0.00, '60': 0.01, '30': 0.07, '0': 0.40}
+positionOffset = {
+  'Traditional': {'pfmn': 0.0, 'size': 0.0},
+  'LowEnd': {'pfmn': -0.8, 'size': 0.8},
+  'HighEnd': {'pfmn': 1.4, 'size': -1.4},
+  'Performance': {'pfmn': 1.4, 'size': -1.0},
+  'Size': {'pfmn': 1.0, 'size': -1.4}
+}
 
 #
 # functions
@@ -79,11 +86,19 @@ class Segment:
       elif p.MTBF <= self.MTBF['low']:
         reliabilityPenalty = fitIn100((self.MTBF['low'] - p.MTBF) / 1000 * 0.2)
 
+      ps = self.pfmn['value'] - positionOffset[self.name]['pfmn']
+      ss = self.size['value'] - positionOffset[self.name]['size']
+      positionercentileFromCenter = 1 - math.sqrt((p.pfmn - (ps)) ** 2 + (p.size - (ss)) ** 2) / 4
+      if positionercentileFromCenter < 0:
+        positionPenalty = 1
+      else:
+        positionPenalty = 0
+
       totalScore = priceScore + reliabilityScore + ageScore + positionScore
       totalScoreAfterARPenalty = totalScore * (1 - ARPenalty[str(AR)])
       adjustedTotalScoreAfterARPenalty = (totalScoreAfterARPenalty / 10) ** 2
-      adjustedTotalScoreAfterARPenaltyAndPromoPenalty = adjustedTotalScoreAfterARPenalty - (1 - p.awrns) / 2 * (1 - p.accss) / 2 * adjustedTotalScoreAfterARPenalty
-      p.score = adjustedTotalScoreAfterARPenaltyAndPromoPenalty * (1 - pricePenalty) * (1 - reliabilityPenalty)
+      adjustedTotalScoreAfterARPenaltyAndPromoPenalty = adjustedTotalScoreAfterARPenalty * (1 - (1 - p.awrns) / 2) * (1 - (1 - p.accss) / 2)
+      p.score = adjustedTotalScoreAfterARPenaltyAndPromoPenalty * (1 - pricePenalty) * (1 - reliabilityPenalty) * (1 - positionPenalty)
 
   def calculatTotalScore(self):
     total = 0
