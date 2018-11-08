@@ -12,7 +12,7 @@ Product = model.Product
 print('Enter html file name you got data from (w/o .html):')
 htmlFile = '{}.html'.format(input())
 print('Enter A/R days:')
-AR = int(input())
+myAR = int(input())
      
 with open(htmlFile, 'r', encoding='utf-8') as f:
   source= f.read()
@@ -85,9 +85,13 @@ with open('data.csv', newline='\n') as file:
       age = float(row[5])
       awrns = float(row[6])
       accss = float(row[7])
-      
-      
-      product = Product(name, pfmn, size, price, MTBF, age, awrns, accss)
+
+      if name[0].lower() == 'b':
+        AR = myAR
+      else:
+        AR = 30
+
+      product = Product(name, pfmn, size, price, MTBF, age, awrns, accss, AR=AR)
       currentSegemnt.products.append(product)
 
     except Exception as e:
@@ -105,7 +109,7 @@ with open('data.csv', newline='\n') as file:
 try:
   for segment in segments:
     segment.calculateNextDemand()
-    segment.calculateScore(AR)
+    segment.calculateScore()
     segment.calculatTotalScore()
     segment.calculateShare()
     segment.calculateTotalShare()

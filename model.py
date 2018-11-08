@@ -25,7 +25,7 @@ def fitIn100(value):
 # classes
 #
 class Product:
-  def __init__(self, name, pfmn, size, price, MTBF, age, awrns, accss, score=-1):
+  def __init__(self, name, pfmn, size, price, MTBF, age, awrns, accss, score=-1, AR=30):
     self.name = name
     self.pfmn = pfmn
     self.size = size
@@ -34,6 +34,7 @@ class Product:
     self.age = age
     self.awrns = awrns
     self.accss = accss
+    self.AR = AR
     self.score = score
     self.share = -1
     self.forecast = -1
@@ -58,7 +59,7 @@ class Segment:
   def calculateNextDemand(self):
     self.nextDemand = self.lastDemand * (1 + self.growth)
   
-  def calculateScore(self, AR):
+  def calculateScore(self):
     for p in self.products:
       pricePercentile = fitIn100(1 - (p.price - self.price['low']) / 10)
       reliabilityPercentile = fitIn100((p.MTBF - self.MTBF['low']) / 5000)
@@ -95,10 +96,10 @@ class Segment:
         positionPenalty = 0
 
       totalScore = priceScore + reliabilityScore + ageScore + positionScore
-      totalScoreAfterARPenalty = totalScore * (1 - ARPenalty[str(AR)])
-      adjustedTotalScoreAfterARPenalty = (totalScoreAfterARPenalty / 10) ** 2
-      adjustedTotalScoreAfterARPenaltyAndPromoPenalty = adjustedTotalScoreAfterARPenalty * (1 - (1 - p.awrns) / 2) * (1 - (1 - p.accss) / 2)
-      p.score = adjustedTotalScoreAfterARPenaltyAndPromoPenalty * (1 - pricePenalty) * (1 - reliabilityPenalty) * (1 - positionPenalty)
+      adjustedTotalScore = (totalScore / 10) ** 2
+      adjustedTotalScoreAfterPromoPenalty = adjustedTotalScore * (1 - (1 - p.awrns) / 2) * (1 - (1 - p.accss) / 2)
+      adjustedTotalScoreAfterPromoAndARPenalty = adjustedTotalScoreAfterPromoPenalty * (1 - ARPenalty[str(p.AR)])
+      p.score = adjustedTotalScoreAfterPromoAndARPenalty * (1 - pricePenalty) * (1 - reliabilityPenalty) * (1 - positionPenalty)
 
   def calculatTotalScore(self):
     total = 0
