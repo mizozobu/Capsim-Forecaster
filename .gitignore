@@ -1,4 +1,3 @@
 *.html
-*.xlsx
 *.csv
 __pycache__
