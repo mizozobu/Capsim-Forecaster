@@ -10,9 +10,7 @@ Segment = model.Segment
 Product = model.Product 
 
 print('Enter html file name you got data from (w/o .html):')
-htmlFile = '{}.html'.format(input())
-print('Enter A/R days:')
-myAR = int(input())
+htmlFile = 'courier/{}.html'.format(input())
      
 with open(htmlFile, 'r', encoding='utf-8') as f:
   source= f.read()
@@ -71,7 +69,7 @@ for segmentName, index in indexMap.items():
 #
 # products in segment
 #
-with open('data.csv', newline='\n') as file:
+with open('output/data.csv', newline='\n') as file:
   rowsInData = csv.reader(file, delimiter=',')
   currentSegemnt = None
   currentSegemntName = None
@@ -82,16 +80,13 @@ with open('data.csv', newline='\n') as file:
       size = float(row[2])
       price = float(row[3])
       MTBF = float(row[4])
-      age = float(row[5])
+      age = float(row[5]) + 1
       awrns = float(row[6])
       accss = float(row[7])
+      score = float(row[8])
 
-      if name[0].lower() == 'b':
-        AR = myAR
-      else:
-        AR = 30
-
-      product = Product(name, pfmn, size, price, MTBF, age, awrns, accss, AR=AR)
+      product = Product(name, pfmn, size, price, MTBF, age, awrns, accss)
+      product.score = score
       currentSegemnt.products.append(product)
 
     except Exception as e:
@@ -109,7 +104,7 @@ with open('data.csv', newline='\n') as file:
 try:
   for segment in segments:
     segment.calculateNextDemand()
-    segment.calculateScore()
+    # segment.calculateScore()
     segment.calculatTotalScore()
     segment.calculateShare()
     segment.calculateTotalShare()
@@ -124,7 +119,7 @@ except Exception as e:
 # write to csv
 # 
 try:
-  f = open('forecast.csv', 'w', encoding='UTF-8')
+  f = open('output/forecast.csv', 'w', encoding='UTF-8')
   writer = csv.writer(f, lineterminator='\n')
   for segment in segments:
     writer.writerow([segment.name])

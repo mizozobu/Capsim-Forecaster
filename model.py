@@ -25,7 +25,7 @@ def fitIn100(value):
 # classes
 #
 class Product:
-  def __init__(self, name, pfmn, size, price, MTBF, age, awrns, accss, score=-1, AR=30):
+  def __init__(self, name, pfmn, size, price, MTBF, age, awrns, accss, score=-1):
     self.name = name
     self.pfmn = pfmn
     self.size = size
@@ -34,7 +34,6 @@ class Product:
     self.age = age
     self.awrns = awrns
     self.accss = accss
-    self.AR = AR
     self.score = score
     self.share = -1
     self.forecast = -1
@@ -58,48 +57,6 @@ class Segment:
   
   def calculateNextDemand(self):
     self.nextDemand = self.lastDemand * (1 + self.growth)
-  
-  def calculateScore(self):
-    for p in self.products:
-      pricePercentile = fitIn100(1 - (p.price - self.price['low']) / 10)
-      reliabilityPercentile = fitIn100((p.MTBF - self.MTBF['low']) / 5000)
-      agePercentile = fitIn100(1 - 0.9 * abs(p.age - self.age['value']) / self.ageOffset)
-      positionercentile = fitIn100(1 - math.sqrt((p.pfmn - self.pfmn['value']) ** 2 + (p.size - self.size['value']) ** 2) / 4)
-
-      priceScore = self.price['weight'] * pricePercentile * 100
-      reliabilityScore = self.MTBF['weight'] * reliabilityPercentile * 100
-      ageScore = self.age['weight'] * agePercentile * 100
-      positionScore = self.pfmn['weight'] * positionercentile * 100
-
-      if pricePercentile < 0:
-        pricePenalty = 0
-      elif p.price >= self.price['high']:
-        pricePenalty = fitIn100((p.price - self.price['high']) * 0.2)
-      elif p.price <= self.price['low']:
-        pricePenalty = fitIn100((self.price['low'] - p.price) * 0.2)
-      else:
-        pricePenalty = 0
-
-      if reliabilityPercentile > 0:
-        reliabilityPenalty = 0
-      elif p.MTBF >= self.MTBF['high']:
-        reliabilityPenalty = fitIn100((p.MTBF - self.MTBF['high']) / 1000 * 0.2)
-      elif p.MTBF <= self.MTBF['low']:
-        reliabilityPenalty = fitIn100((self.MTBF['low'] - p.MTBF) / 1000 * 0.2)
-
-      ps = self.pfmn['value'] - positionOffset[self.name]['pfmn']
-      ss = self.size['value'] - positionOffset[self.name]['size']
-      positionercentileFromCenter = 1 - math.sqrt((p.pfmn - (ps)) ** 2 + (p.size - (ss)) ** 2) / 4
-      if positionercentileFromCenter < 0:
-        positionPenalty = 1
-      else:
-        positionPenalty = 0
-
-      totalScore = priceScore + reliabilityScore + ageScore + positionScore
-      adjustedTotalScore = (totalScore / 10) ** 2
-      adjustedTotalScoreAfterPromoPenalty = adjustedTotalScore * (1 - (1 - p.awrns) / 2) * (1 - (1 - p.accss) / 2)
-      adjustedTotalScoreAfterPromoAndARPenalty = adjustedTotalScoreAfterPromoPenalty * (1 - ARPenalty[str(p.AR)])
-      p.score = adjustedTotalScoreAfterPromoAndARPenalty * (1 - pricePenalty) * (1 - reliabilityPenalty) * (1 - positionPenalty)
 
   def calculatTotalScore(self):
     total = 0
