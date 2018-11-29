@@ -16,9 +16,19 @@ It will be a great starting point for your forecast. You have to take your decis
 ```
 python scrape.py
 ```
+and input the name of your html courier wihtout extension. For exmpale, if your file name is `round0.html`,
+```
+Enter file name to scrape (w/o .html):
+round0
+```
 and you can see scraped data in `data.csv` in `output` direcotry.
 1. To forecast based on December survey score, run
 ```
 python forecast.py
+```
+and input the name of your html courier wihtout extension. For exmpale, if your file name is `round0.html`,
+```
+Enter html file name you got data from (w/o .html):
+round0
 ```
 and you can see forecasted data in `forecast.csv` in `output` direcotry.
