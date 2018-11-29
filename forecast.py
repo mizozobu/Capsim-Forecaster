@@ -3,6 +3,7 @@
 #
 import bs4 as bs
 import csv
+import os
 import math
 import model
 
@@ -10,9 +11,9 @@ Segment = model.Segment
 Product = model.Product 
 
 print('Enter html file name you got data from (w/o .html):')
-htmlFile = 'courier/{}.html'.format(input())
+htmlFile = '{}.html'.format(input())
      
-with open(htmlFile, 'r', encoding='utf-8') as f:
+with open(os.path.join('courier', htmlFile), 'r', encoding='utf-8') as f:
   source= f.read()
 
 soup = bs.BeautifulSoup(source, 'lxml')
@@ -69,7 +70,7 @@ for segmentName, index in indexMap.items():
 #
 # products in segment
 #
-with open('output/data.csv', newline='\n') as file:
+with open(os.path.join('output', 'data.csv'), 'r', encoding='UTF-8', newline='\n') as file:
   rowsInData = csv.reader(file, delimiter=',')
   currentSegemnt = None
   currentSegemntName = None
@@ -119,7 +120,7 @@ except Exception as e:
 # write to csv
 # 
 try:
-  f = open('output/forecast.csv', 'w', encoding='UTF-8')
+  f = open(os.path.join('output', 'forecast.csv'), 'w', encoding='UTF-8')
   writer = csv.writer(f, lineterminator='\n')
   for segment in segments:
     writer.writerow([segment.name])

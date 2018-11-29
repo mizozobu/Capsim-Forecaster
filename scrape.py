@@ -2,6 +2,7 @@
 # scraping
 #
 import bs4 as bs
+import os
 import math
 import model
 
@@ -11,7 +12,7 @@ Product = model.Product
 print('Enter file name to scrape (w/o .html):')
 file = '{}.html'.format(input())
 
-with open(file, 'r', encoding='utf-8') as f:
+with open(os.path.join('courier', file), 'r', encoding='utf-8') as f:
   source= f.read()
 
 soup = bs.BeautifulSoup(source, 'lxml')
@@ -97,7 +98,7 @@ for segmentName, index in indexMap.items():
 import csv
 
 try:
-  f = open('data.csv', 'w', encoding='UTF-8')
+  f = open(os.path.join('output', 'data.csv'), 'w', encoding='UTF-8')
   writer = csv.writer(f, lineterminator='\n')
   for s in segments:
     writer.writerow([s.name])
