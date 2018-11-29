@@ -3,8 +3,7 @@
 Forecast based on December customer survey score based on the principle below. It does not caclucate customer survey score.
 
 > [3.2 Estimating the Customer Survey Score](http://ww3.capsim.com/guides/capstone_harvard2011/the-guide/3-the-customer-survey-score034f.html)
-
-The customer survey score drives demand for your product in a segment. Your demand in any given month is your score divided by the sum of the scores. For example, if your product’s score in April is 20, and your competitors’ scores are 27, 19, 21, and 3, then your product’s April demand is:
+>The customer survey score drives demand for your product in a segment. Your demand in any given month is your score divided by the sum of the scores. For example, if your product’s score in April is 20, and your competitors’ scores are 27, 19, 21, and 3, then your product’s April demand is:
 20/(20+27+19+21+3) = 22%
 Assuming you had enough inventory to meet demand, you would receive 22% of segment sales for April.
 
