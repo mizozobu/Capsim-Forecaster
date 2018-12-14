@@ -1,14 +1,7 @@
 import math
 
 ageOffset = {'Traditional': 2, 'LowEnd': 5, 'HighEnd': 3, 'Performance': 2.5, 'Size': 2.5}
-ARPenalty = {'90': 0.00, '60': 0.01, '30': 0.07, '0': 0.40}
-positionOffset = {
-  'Traditional': {'pfmn': 0.0, 'size': 0.0},
-  'LowEnd': {'pfmn': -0.8, 'size': 0.8},
-  'HighEnd': {'pfmn': 1.4, 'size': -1.4},
-  'Performance': {'pfmn': 1.4, 'size': -1.0},
-  'Size': {'pfmn': 1.0, 'size': -1.4}
-}
+ageOffset = {'Thrift': 3, 'Core': 2, 'Nano': 1, 'Elite': 0}
 
 #
 # functions

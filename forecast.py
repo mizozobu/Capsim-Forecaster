@@ -21,7 +21,8 @@ soup = bs.BeautifulSoup(source, 'lxml')
 #
 # constants
 #
-indexMap = {'Traditional': 64, 'LowEnd': 79, 'HighEnd': 94, 'Performance': 109, 'Size': 124}
+# indexMap = {'Traditional': 64, 'LowEnd': 79, 'HighEnd': 94, 'Performance': 109, 'Size': 124}
+indexMap = {'Thrift': 65, 'Core': 80, 'Nano': 95, 'Elite': 110}
 
 #
 # segment
